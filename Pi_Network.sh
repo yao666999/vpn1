@@ -242,7 +242,6 @@ uninstall_frps() {
     # 重载守护进程
     systemctl daemon-reload >/dev/null 2>&1
     
-    log_success "FRPS服务卸载完成"
 }
 
 # 安装FRPS服务
