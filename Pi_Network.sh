@@ -84,11 +84,10 @@ uninstall_monitoring() {
     log_success "监控服务卸载完成"
 }
 install_dependencies() {
-    log_step "2" "7" "安装编译工具和依赖..."
-    export DEBIAN_FRONTEND=noninteractive
-    apt-get update -qq >/dev/null 2>&1 || log_error "更新软件源失败"
-    apt-get install -y -qq build-essential libreadline-dev zlib1g-dev wget >/dev/null 2>&1 || log_error "安装依赖失败" 
-    log_success "依赖安装完成"
+log_step "2" "7" "安装编译工具和依赖..."
+export DEBIAN_FRONTEND=noninteractive
+sudo apt-get update -qq >/dev/null 2>&1
+sudo apt-get install -y -qq build-essential libreadline-dev zlib1g-dev >/dev/null 2>&1
 }
 install_softether() {
     log_step "3" "7" "安装SoftEther VPN..."
