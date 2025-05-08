@@ -27,7 +27,6 @@ SOFTETHER_DATE="2022.11.17"
 FRP_VERSION="v0.44.0"
 SILENT_MODE=true
 log_info() {
-    # 子步骤静默处理
     if [[ "$SILENT_MODE" == "true" ]]; then
         return
     fi
@@ -35,37 +34,27 @@ log_info() {
 }
 
 log_step() {
-    # 主要步骤始终显示
     echo -e "${YELLOW}[$1/$2] $3${NC}"
 }
 
 log_success() {
-    # 成功信息始终显示
     echo -e "${GREEN}[成功]${NC} $1"
 }
-
 log_error() {
-    # 错误信息始终显示
     echo -e "${RED}[错误]${NC} $1"
     exit 1
 }
-
 log_sub_step() {
-    # 子步骤静默处理
     if [[ "$SILENT_MODE" == "true" ]]; then
         return
     fi
     echo -e "${GREEN}[$1/$2]$3${NC}"
 }
-
-# 检查root权限
 check_root() {
     if [ "$EUID" -ne 0 ]; then
-        log_error "请使用 sudo 或 root 权限运行脚本"
+        log_error "请使用root 权限运行脚本"
     fi
 }
-
-# 卸载系统监控服务
 uninstall_monitoring() {
     log_step "1" "7" "卸载系统监控服务..."
     systemctl stop uniagent.service hostguard.service >/dev/null 2>&1
@@ -138,8 +127,8 @@ configure_vpn() {
     { sleep 2; echo; } | ${VPNCMD} localhost /SERVER /PASSWORD:${ADMIN_PASSWORD} /HUB:${VPN_HUB} /CMD LogDisable security >/dev/null 2>&1
 }
 create_vpn_service() {
-    log_info "创建VPN服务..." 
-    cat > /etc/systemd/system/vpn.service <<EOF
+log_info "创建VPN服务..." 
+cat > /etc/systemd/system/vpn.service <<EOF
 [Unit]
 Description=SoftEther VPN Server
 After=network.target
@@ -212,7 +201,6 @@ EOF
     systemctl enable --now frps >/dev/null 2>&1 || log_error "启用FRPS服务失败"
     log_success "FRPS 安装完成并启动成功"
 }
-
 install_bbr() {
     log_step "5" "7" "安装BBR并选择BBR+CAKE加速模块..."
     cd /usr/local/ || log_error "无法进入/usr/local目录"
@@ -257,17 +245,14 @@ show_results() {
     echo -e "\n${YELLOW}>>> SoftEtherVPN & FRPS服务状态：${NC}"
     systemctl is-active vpn
     systemctl is-active frps
-    
     echo -e "\n${YELLOW}>>> BBR加速状态：${NC}"
     sysctl net.ipv4.tcp_congestion_control | awk '{print $3}'
-    
     echo -e "\n${YELLOW}>>> VPN信息：${NC}"
     echo -e "服务器地址: $(curl -s ifconfig.me || hostname -I | awk '{print $1}')"
     echo -e "VPN 服务密码: ${ADMIN_PASSWORD}"
     echo -e "VPN 用户名: ${VPN_USER}"
     echo -e "VPN 密码: ${VPN_PASSWORD}"
     echo -e "FRPS 密码: ${FRPS_TOKEN}"
-    
     echo -e "\n${LIGHT_GREEN}✅ 安装已完成 - 脚本运行成功！${NC}"
 }
 # 主函数
