@@ -236,25 +236,19 @@ show_results() {
 }
 
 install_dependencies() {
-    log_step "1" "7" "安装编译工具和依赖..."
-    log_success "依赖安装完成"
+    # 依赖安装操作
 }
 
 install_bbr() {
-    log_step "5" "7" "安装BBR并选择BBR+CAKE加速模块..."
-    log_success "BBR安装完成"
+    # BBR安装操作
 }
 
 setup_maintenance() {
-    log_step "6" "7" "设置定时维护..."
     add_cron_job
-    log_success "定时维护设置完成"
 }
 
 cleanup_temp() {
-    log_step "7" "7" "清理临时缓存文件..."
     cleanup
-    log_success "临时文件清理完成"
 }
 
 main() {
