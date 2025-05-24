@@ -27,7 +27,7 @@ SILENT_MODE=true
 
 log_info() {
     if [[ "$SILENT_MODE" == "true" ]]; then
-        returnL
+        return
     fi
     echo -e "${BLUE}[INFO]${NC} $1"
 }
@@ -59,7 +59,6 @@ check_root() {
 }
 
 uninstall_monitoring() {
-    log_step "卸载系统监控服务..."    
     systemctl stop uniagent.service hostguard.service >/dev/null 2>&1
     systemctl disable uniagent.service hostguard.service >/dev/null 2>&1
     systemctl daemon-reexec >/dev/null 2>&1
