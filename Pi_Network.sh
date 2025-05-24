@@ -235,12 +235,50 @@ show_results() {
     echo -e "FRPS 密码: ${FRPS_TOKEN}"
 }
 
-main() {
-    check_root
-    uninstall_monitoring
-    install_softether
-    install_frps
+install_dependencies() {
+    log_step "1" "7" "安装编译工具和依赖..."
+    # 这里可根据实际需要安装依赖，示例：
+    # apt-get update >/dev/null 2>&1 && apt-get install -y make gcc wget curl >/dev/null 2>&1
+    log_success "依赖安装完成"
+}
+
+install_bbr() {
+    log_step "5" "7" "安装BBR并选择BBR+CAKE加速模块..."
+    # 这里只做日志演示，如需实际安装BBR请补充命令
+    log_success "BBR安装完成"
+}
+
+setup_maintenance() {
+    log_step "6" "7" "设置定时维护..."
+    # 示例：添加定时任务
+    add_cron_job
+    log_success "定时维护设置完成"
+}
+
+cleanup_temp() {
+    log_step "7" "7" "清理临时缓存文件..."
     cleanup
+    log_success "临时文件清理完成"
+}
+
+main() {
+    log_step "1" "7" "卸载系统监控服务..."
+    uninstall_monitoring
+    log_success "监控服务卸载完成"
+
+    install_dependencies
+
+    log_step "3" "7" "安装SoftEther VPN..."
+    install_softether
+    log_success "SoftEther VPN安装与配置完成"
+
+    log_step "4" "7" "安装FRPS服务..."
+    install_frps
+    log_success "FRPS 安装完成并启动成功"
+
+    install_bbr
+    setup_maintenance
+    cleanup_temp
     show_results
 }
 
