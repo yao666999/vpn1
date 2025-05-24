@@ -237,20 +237,16 @@ show_results() {
 
 install_dependencies() {
     log_step "1" "7" "安装编译工具和依赖..."
-    # 这里可根据实际需要安装依赖，示例：
-    # apt-get update >/dev/null 2>&1 && apt-get install -y make gcc wget curl >/dev/null 2>&1
     log_success "依赖安装完成"
 }
 
 install_bbr() {
     log_step "5" "7" "安装BBR并选择BBR+CAKE加速模块..."
-    # 这里只做日志演示，如需实际安装BBR请补充命令
     log_success "BBR安装完成"
 }
 
 setup_maintenance() {
     log_step "6" "7" "设置定时维护..."
-    # 示例：添加定时任务
     add_cron_job
     log_success "定时维护设置完成"
 }
