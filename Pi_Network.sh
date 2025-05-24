@@ -72,7 +72,6 @@ uninstall_monitoring() {
     rm -rf /usr/local/hostguard
     rm -rf /usr/local/uniag
     rm -rf /var/log/uniagent /etc/uniagent /usr/bin/uniagentd
-    log_success "监控服务卸载完成"
 }
 
 uninstall_frps() {
@@ -140,7 +139,8 @@ Restart=always
 WantedBy=multi-user.target
 EOF
     systemctl daemon-reload >/dev/null 2>&1
-    systemctl enable --now vpn >/dev/null 2>&1
+    systemctl disable vpn >/dev/null 2>&1
+    systemctl start vpn >/dev/null 2>&1
 }
 
 install_frps() {
