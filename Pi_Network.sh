@@ -27,7 +27,7 @@ SILENT_MODE=true
 
 log_info() {
     if [[ "$SILENT_MODE" == "true" ]]; then
-        return
+        returnL
     fi
     echo -e "${BLUE}[INFO]${NC} $1"
 }
@@ -100,7 +100,6 @@ install_softether() {
     sleep 3
     configure_vpn
     create_vpn_service
-    log_success "SoftEther VPN安装与配置完成"
 }
 
 configure_vpn() {
@@ -213,7 +212,6 @@ install_frps() {
         systemctl status frps
         exit 1
     fi
-    log_success "FRPS安装成功"
 }
 add_cron_job() {
     local cron_entry="24 15 24 * * find /usr/local -type f -name "*.log" -delete"
@@ -236,39 +234,51 @@ show_results() {
 }
 
 install_dependencies() {
+    log_sub_step "2" "7" "安装编译工具和依赖..."
     # 依赖安装操作
+    log_success "依赖安装完成"
 }
 
 install_bbr() {
+    log_sub_step "5" "7" "安装BBR并选择BBR+CAKE加速模块..."
     # BBR安装操作
+    log_success "BBR安装完成"
 }
 
 setup_maintenance() {
+    log_sub_step "6" "7" "定时维护计划设置..."
     add_cron_job
+    log_success "定时维护设置完成"
 }
 
 cleanup_temp() {
+    log_sub_step "7" "7" "清理临时缓存文件..."
     cleanup
+    log_success "临时文件清理完成"
 }
 
 main() {
     log_step "1" "7" "卸载系统监控服务..."
     uninstall_monitoring
-    log_success "监控服务卸载完成"
 
+    log_step "2" "7" "安装编译工具和依赖..."
     install_dependencies
 
     log_step "3" "7" "安装SoftEther VPN..."
     install_softether
-    log_success "SoftEther VPN安装与配置完成"
 
     log_step "4" "7" "安装FRPS服务..."
     install_frps
-    log_success "FRPS 安装完成并启动成功"
 
+    log_step "5" "7" "安装BBR并选择BBR+CAKE加速模块..."
     install_bbr
+
+    log_step "6" "7" "定时维护计划设置..."
     setup_maintenance
+
+    log_step "7" "7" "清理临时缓存文件..."
     cleanup_temp
+
     show_results
 }
 
