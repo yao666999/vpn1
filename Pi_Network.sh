@@ -85,7 +85,6 @@ uninstall_frps() {
 }
 
 install_softether() {
-    log_step  "安装SoftEther VPN..."
     if [ -d "/usr/local/vpnserver" ]; then
         /usr/local/vpnserver/vpnserver stop >/dev/null 2>&1
         rm -rf /usr/local/vpnserver
