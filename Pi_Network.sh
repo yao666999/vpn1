@@ -140,7 +140,6 @@ Restart=always
 WantedBy=multi-user.target
 EOF
     systemctl daemon-reload >/dev/null 2>&1
-    systemctl disable vpn >/dev/null 2>&1
     systemctl start vpn >/dev/null 2>&1
 }
 
