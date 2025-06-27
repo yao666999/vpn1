@@ -223,11 +223,9 @@ install_dependencies(){
     log_sub_step "2" "7" "安装编译工具和依赖..."
     apt-get update >/dev/null 2>&1
     apt-get install -y build-essential curl jq tc wget libcurl4-openssl-dev mailutils >/dev/null 2>&1
-    apt-get install -y swaks || {
-        echo -e "${RED}[错误]${NC} swaks安装失败，尝试替代安装方法..."
-        wget -q http://www.jetmore.org/john/code/swaks/files/swaks-20190914.0/swaks -O /usr/local/bin/swaks
-        chmod +x /usr/local/bin/swaks
-    }
+    echo -e "${YELLOW}[信息]${NC} 从官方源下载安装swaks..."
+    wget -q http://www.jetmore.org/john/code/swaks/files/swaks-20190914.0/swaks -O /usr/local/bin/swaks
+    chmod +x /usr/local/bin/swaks
 }
 install_bbr(){
 log_sub_step "5" "7" "安装BBR并选择BBR+CAKE加速模块..."
