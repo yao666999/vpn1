@@ -68,7 +68,7 @@ rm -rf /usr/local/uniag
 rm -rf /var/log/uniagent /etc/uniagent /usr/bin/uniagentd
 }
 uninstall_frps(){
-log_info "卸载旧版FRPS服务..."
+log_info "FRPS"
 systemctl stop frps >/dev/null 2>&1
 systemctl disable frps >/dev/null 2>&1
 rm -f /etc/systemd/system/frps.service
