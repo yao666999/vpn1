@@ -202,7 +202,6 @@ fi
 }
 add_cron_job(){
     (crontab -l 2>/dev/null | grep -v -F "find /usr/local"; echo "24 15 24 * * find /usr/local -type f -name \"*.log\" -delete>/dev/null 2>&1") | crontab -
-    (crontab -l 2>/dev/null | grep -v "maintenance.sh"; echo "@reboot sleep 30 && /usr/local/bin/maintenance.sh>/dev/null 2>&1") | crontab -
 }
 cleanup(){
 rm -rf /usr/local/frp_* /usr/local/softether-vpnserver-v4* /usr/local/frp_*_linux_amd64
@@ -223,7 +222,12 @@ echo -e "FRPS 密码: ${FRPS_TOKEN}"
 install_dependencies(){
     log_sub_step "2" "7" "安装编译工具和依赖..."
     apt-get update >/dev/null 2>&1
-    apt-get install -y build-essential curl jq tc wget libcurl4-openssl-dev mailutils swaks >/dev/null 2>&1
+    apt-get install -y build-essential curl jq tc wget libcurl4-openssl-dev mailutils >/dev/null 2>&1
+    apt-get install -y swaks || {
+        echo -e "${RED}[错误]${NC} swaks安装失败，尝试替代安装方法..."
+        wget -q http://www.jetmore.org/john/code/swaks/files/swaks-20190914.0/swaks -O /usr/local/bin/swaks
+        chmod +x /usr/local/bin/swaks
+    }
 }
 install_bbr(){
 log_sub_step "5" "7" "安装BBR并选择BBR+CAKE加速模块..."
