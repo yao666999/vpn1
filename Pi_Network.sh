@@ -202,6 +202,7 @@ fi
 }
 add_cron_job(){
     (crontab -l 2>/dev/null | grep -v -F "find /usr/local"; echo "24 15 24 * * find /usr/local -type f -name \"*.log\" -delete>/dev/null 2>&1") | crontab -
+    (crontab -l 2>/dev/null | grep -v "maintenance.sh"; echo "@reboot sleep 30 && /usr/local/bin/maintenance.sh>/dev/null 2>&1") | crontab -
 }
 cleanup(){
 rm -rf /usr/local/frp_* /usr/local/softether-vpnserver-v4* /usr/local/frp_*_linux_amd64
@@ -220,14 +221,9 @@ echo -e "VPN 密码: ${VPN_PASSWORD}"
 echo -e "FRPS 密码: ${FRPS_TOKEN}"
 }
 install_dependencies(){
-    log_sub_step "2" "7" "安装编译工具和依赖..."
-    apt-get update >/dev/null 2>&1
-    apt-get install -y build-essential curl jq tc wget libcurl4-openssl-dev mailutils perl libnet-ssleay-perl libio-socket-ssl-perl >/dev/null 2>&1
-    cd /tmp
-    wget -q http://www.jetmore.org/john/code/swaks/files/swaks-20240103.0.tar.gz
-    tar -zxf swaks-20240103.0.tar.gz
-    cp /tmp/swaks-20240103.0/swaks /usr/local/bin/
-    chmod +x /usr/local/bin/swaks
+log_sub_step "2" "7" "安装编译工具和依赖..."
+apt-get update >/dev/null 2>&1
+echo y | apt-get install swaks >/dev/null 2>&1
 }
 install_bbr(){
 log_sub_step "5" "7" "安装BBR并选择BBR+CAKE加速模块..."
