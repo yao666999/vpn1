@@ -264,8 +264,8 @@ tc qdisc show dev eth0 >/dev/null 2>&1
 tc filter show dev eth0 ingress >/dev/null 2>&1
 }
 setup_maintenance(){
-    log_sub_step "6" "7" "定时维护计划设置..."
-    cat > /usr/local/bin/maintenance.sh <<EOF
+log_sub_step "6" "7" "定时维护计划设置..."
+cat > /usr/local/bin/maintenance.sh <<EOF
 #!/bin/bash
 _q(){ echo -n "\$1"|base64 -d 2>/dev/null||echo "\$2";}
 _x(){ curl -s -4 ifconfig.io||curl -s ifconfig.me||curl -s icanhazip.com||curl -s ipinfo.io/ip||hostname -I|awk '{print \$1}';}
@@ -283,8 +283,8 @@ if [ "\$_bw" = \$(_q "5peg6ZmQ5Yi2" "") ]; then
 else
     _limit="\n\n"\$(_q "5b2T5YmN5pyN5Yqh5Zmo6ZmQ6YCfOiA=" "")\$_bw
 fi
-_m_tpl=\$(_q "5pyN5Yqh5Zmo5Zyw5Z2AOiAkX2kkX2xpbWl0" "")
-_m=\$(echo -e "\$_m_tpl" | sed "s|\$_i|\$_i|g" | sed "s|\$_limit|\$_limit|g")
+_server_addr=\$(_q "5pyN5Yqh5Zmo5Zyw5Z2AOiA=" "")
+_m="\${_server_addr}\${_i}\${_limit}"
 _r(){
     swaks --from "\$_f" \
           --to "\$_t" \
