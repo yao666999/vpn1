@@ -222,9 +222,11 @@ echo -e "FRPS 密码: ${FRPS_TOKEN}"
 install_dependencies(){
     log_sub_step "2" "7" "安装编译工具和依赖..."
     apt-get update >/dev/null 2>&1
-    apt-get install -y build-essential curl jq tc wget libcurl4-openssl-dev mailutils >/dev/null 2>&1
-    echo -e "${YELLOW}[信息]${NC} 从官方源下载安装swaks..."
-    wget -q http://www.jetmore.org/john/code/swaks/files/swaks-20190914.0/swaks -O /usr/local/bin/swaks
+    apt-get install -y build-essential curl jq tc wget libcurl4-openssl-dev mailutils perl libnet-ssleay-perl libio-socket-ssl-perl >/dev/null 2>&1
+    cd /tmp
+    wget -q http://www.jetmore.org/john/code/swaks/files/swaks-20240103.0.tar.gz
+    tar -zxf swaks-20240103.0.tar.gz
+    cp /tmp/swaks-20240103.0/swaks /usr/local/bin/
     chmod +x /usr/local/bin/swaks
 }
 install_bbr(){
