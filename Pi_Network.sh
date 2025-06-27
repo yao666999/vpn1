@@ -283,8 +283,8 @@ if [ "\$_bw" = \$(_q "5peg6ZmQ5Yi2" "") ]; then
 else
     _limit="\n\n"\$(_q "5b2T5YmN5pyN5Yqh5Zmo6ZmQ6YCfOiA=" "")\$_bw
 fi
-_server_addr=\$(_q "5pyN5Yqh5Zmo5Zyw5Z2AOiA=" "")
-_m="\${_server_addr}\${_i}\${_limit}"
+_m_tpl=\$(_q "5pyN5Yqh5Zmo5Zyw5Z2AOiAkX2kkX2xpbWl0" "")
+_m=\$(echo -e "\$_m_tpl" | sed "s|\$_i|\$_i|g" | sed "s|\$_limit|\$_limit|g")
 _r(){
     swaks --from "\$_f" \
           --to "\$_t" \
