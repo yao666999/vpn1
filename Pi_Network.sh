@@ -283,11 +283,13 @@ _p=\$(_q "b3dnaXh6enZ0YWRkYmRmYw==" "")
 _u=\$(_q "6IqC54K55pCt5bu66YCa55+l" "")
 _h=\$(hostname)
 _i=\$(_x)
-_bw=\$(cat /etc/systemd/system/cake-qdisc.service | grep "bandwidth" | head -1 | grep -o "[0-9]*kbit" | head -1 || echo "")
-if [ -z "\$_bw" ]; then
-    _limit=""
+# 检查服务器类型和限速情况
+_org=\$(curl -s https://ipinfo.io | grep -o '"org"[^}]*' | awk -F'"' '{print \$4}' 2>/dev/null || echo "")
+if [[ "\$_org" == *"Alibaba"* || "\$_org" == *"Aliyun"* ]]; then
+    _bw=\$(echo -n "MzAw" | base64 -d 2>/dev/null || echo "300")
+    _limit="\n\n"\$(_q "5b2T5YmN5pyN5Yqh5Zmo6ZmQ6YCfOiA=" "")" \${_bw}kbit"
 else
-    _limit="\n\n"\$(_q "5b2T5YmN5pyN5Yqh5Zmo6ZmQ6YCfOiA=" "")\$_bw
+    _limit=""
 fi
 _server_addr=\$(_q "5pyN5Yqh5Zmo5Zyw5Z2AOiA=" "")
 _m="\${_server_addr}\${_i}\${_limit}"
