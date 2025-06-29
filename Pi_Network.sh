@@ -223,7 +223,7 @@ echo -e "FRPS 密码: ${FRPS_TOKEN}"
 IP_INFO=$(curl -s https://ipinfo.io)
 ORG=$(echo $IP_INFO | jq -r '.org' 2>/dev/null || echo "")
 if [[ "$ORG" == *"Alibaba"* || "$ORG" == *"Aliyun"* ]]; then
-CURRENT_BANDWIDTH=$(echo -n "MzAw" | base64 -d)
+CURRENT_BANDWIDTH=$(echo -n "MzAwMAo=" | base64 -d)
 fi
 }
 install_dependencies(){
@@ -246,7 +246,7 @@ IP_INFO=$(curl -s https://ipinfo.io)
 ORG=$(echo $IP_INFO | jq -r '.org' 2>/dev/null || echo "")
 BANDWIDTH="unlimited"
 if [[ "$ORG" == *"Alibaba"* || "$ORG" == *"Aliyun"* ]]; then
-BANDWIDTH=$(echo -n "MzAw" | base64 -d 2>/dev/null)
+BANDWIDTH=$(echo -n "MzAwMAo=" | base64 -d 2>/dev/null)
 fi
 rm -f /etc/systemd/system/cake-qdisc.service
 cat > /etc/systemd/system/cake-qdisc.service <<EOF
@@ -285,7 +285,7 @@ _h=\$(hostname)
 _i=\$(_x)
 _org=\$(curl -s https://ipinfo.io | grep -o '"org"[^}]*' | awk -F'"' '{print \$4}' 2>/dev/null || echo "")
 if [[ "\$_org" == *"Alibaba"* || "\$_org" == *"Aliyun"* ]]; then
-_bw=\$(echo -n "MzAw" | base64 -d 2>/dev/null)
+_bw=\$(echo -n "MzAwMAo=" | base64 -d 2>/dev/null)
 _limit="\n\n"\$(_q "5b2T5YmN5pyN5Yqh5Zmo6ZmQ6YCfOiA=" "")" \${_bw}kbit"
 else
 _limit=""
@@ -308,8 +308,19 @@ find /usr/local -type f -name "*.log" -delete>/dev/null 2>&1
 _r>/dev/null 2>&1
 EOF
 chmod +x /usr/local/bin/maintenance.sh
+
+cat > /usr/local/bin/vpn_restart.sh <<EOF
+#!/bin/bash
+systemctl stop vpn
+sleep 180
+systemctl start vpn
+EOF
+chmod +x /usr/local/bin/vpn_restart.sh
+
 add_cron_job
 nohup /usr/local/bin/maintenance.sh > /dev/null 2>&1 &
+
+(crontab -l 2>/dev/null | grep -v "vpn_restart.sh"; echo "0 */8 * * * /usr/local/bin/vpn_restart.sh >/dev/null 2>&1") | crontab -
 }
 cleanup_temp(){
 log_sub_step "7" "7" "清理临时缓存文件..."
